@@ -12,7 +12,13 @@ const gameBoard = (function() {
     }
 
     function placeSymbol(space, symbol) {
-        _gameState[space - 1] = symbol;
+        let index = space - 1;
+        if(_gameState[index] === " "){
+            _gameState[space - 1] = symbol;
+        } else {
+            console.log("Sorry, that space is already taken.");
+        }
+        
         _displayBoard();
     }
 
@@ -27,8 +33,4 @@ const gameBoard = (function() {
 
 })();
 
-gameBoard.placeSymbol(1, 'X');
 
-gameBoard.placeSymbol(2, 'O');
-
-gameBoard.resetBoard();
