@@ -11,3 +11,10 @@
     border: 2px solid black;
 }
 
+.X::after {
+    content: "X";
+}
+
+.O::after {
+    content: "O";
+}

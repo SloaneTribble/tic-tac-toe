@@ -18,7 +18,7 @@ const gameBoard = (function() {
         } else {
             console.log("Sorry, that space is already taken.");
         }
-        
+        checkForWin();
         _displayBoard();
     }
 
@@ -73,34 +73,46 @@ const playerFactory = (symbol) => {
 
 const newGame = (playerChoice) => {
 
-    let gameOver = false;
+    let gameOver = gameBoard.checkForWin();
 
     const player = playerFactory(playerChoice);
 
-    let npcChoice = (playerChoice === "X")? 'O': 'X';
+    let npcChoice = (playerChoice === "X")? "O": "X";
 
     const npc = playerFactory(npcChoice);
 
     if(player.symbol === "X"){
         player.turn = true;
-    } else {player.turn = false;}
+    } else {player.turn = false;
+            npc.turn = true;}
 
-    // while(!gameOver){
-    //     while(player.turn === true){
-    //         console.log("Your turn");
-    //     }
+    if(!gameOver){
+        if(player.turn === true){
+            document.querySelector(".status-display").textContent = "Your turn";
+        }
+    }
 
-    // }
+    if(npc.turn){
+        const npcSpace = Math.floor(Math.random() * 8) + 1;
+        npc.place(npcSpace);
+        document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
+    }
 
-    return;
+    const gridCells = document.querySelectorAll(".game-cell");
+
+    gridCells.forEach(item => {
+        item.addEventListener('click', () => {
+            gameBoard.placeSymbol(parseInt(item.id), player.symbol);
+            item.classList.add(player.symbol);
+            player.turn = false;
+            
+        })
+})
+
+    return{player, npc};
 }
 
-const gridCells = document.querySelectorAll(".game-cell");
+const game = newGame('O');
 
-gridCells.forEach(item => {
-    item.addEventListener('click', () => {
-        gameBoard.placeSymbol(parseInt(item.id), 'X');
-    })
-})
 
 
