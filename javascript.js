@@ -86,7 +86,7 @@ const newGame = (playerChoice) => {
     } else {player.turn = false;}
 
     // while(!gameOver){
-    //     if(player.turn === true){
+    //     while(player.turn === true){
     //         console.log("Your turn");
     //     }
 
@@ -94,5 +94,13 @@ const newGame = (playerChoice) => {
 
     return;
 }
+
+const gridCells = document.querySelectorAll(".game-cell");
+
+gridCells.forEach(item => {
+    item.addEventListener('click', () => {
+        gameBoard.placeSymbol(parseInt(item.id), 'X');
+    })
+})
 
 
