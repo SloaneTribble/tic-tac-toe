@@ -71,48 +71,61 @@ const playerFactory = (symbol) => {
 }
 
 
-const newGame = (playerChoice) => {
+const gameZone = (function() {
 
-    let gameOver = gameBoard.checkForWin();
+    function newGame(playerChoice){
 
-    const player = playerFactory(playerChoice);
+        let gameOver = gameBoard.checkForWin();
 
-    let npcChoice = (playerChoice === "X")? "O": "X";
+        const player = playerFactory(playerChoice);
 
-    const npc = playerFactory(npcChoice);
+        let npcChoice = (playerChoice === "X")? "O": "X";
 
-    if(player.symbol === "X"){
-        player.turn = true;
-    } else {player.turn = false;
+        const npc = playerFactory(npcChoice);
+
+        console.log("Player symbol:" + player.symbol);
+        console.log("NPC symbol:" + npc.symbol);
+
+        const gridCells = document.querySelectorAll(".game-cell");
+
+        gridCells.forEach(item => {
+            item.addEventListener('click', () => {
+                gameBoard.placeSymbol(parseInt(item.id), player.symbol);
+                item.classList.add(player.symbol);
+                player.turn = false;
+                npc.turn = true;
+            })
+        })
+        
+
+        // X always goes first
+        if(player.symbol === "X"){
+            player.turn = true;
+        } else {player.turn = false;
             npc.turn = true;}
 
-    if(!gameOver){
-        if(player.turn === true){
-            document.querySelector(".status-display").textContent = "Your turn";
-        }
-    }
+        while(gameOver === false){
+            while(player.turn === true){
+                document.querySelector(".status-display").textContent = "Your turn";  
+            }
+            while(npc.turn === true){
+                let npcSpace = Math.floor(Math.random() * 8) + 1;
+                npc.place(npcSpace);
+                document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
+                npc.turn = false;
+                player.turn = true;
+            }
 
-    if(npc.turn){
-        const npcSpace = Math.floor(Math.random() * 8) + 1;
-        npc.place(npcSpace);
-        document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
-    }
+        
+    }}
 
-    const gridCells = document.querySelectorAll(".game-cell");
+    
 
-    gridCells.forEach(item => {
-        item.addEventListener('click', () => {
-            gameBoard.placeSymbol(parseInt(item.id), player.symbol);
-            item.classList.add(player.symbol);
-            player.turn = false;
-            
-        })
-})
+    
 
-    return{player, npc};
-}
+    return {newGame};
+})();
 
-const game = newGame('O');
 
 
 
