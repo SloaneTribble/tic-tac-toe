@@ -22,6 +22,31 @@ const gameBoard = (function() {
         _displayBoard();
     }
 
+    function checkForWin() {
+        let tl = _gameState[0];
+        let tm = _gameState[1];
+        let tr = _gameState[2];
+        let ml = _gameState[3];
+        let mm = _gameState[4];
+        let mr = _gameState[5];
+        let bl = _gameState[6];
+        let bm = _gameState[7];
+        let br = _gameState[8];
+
+        const winningConditions = [tl+tm+tr, ml+mm+mr, bl+bm+br, tl+ml+bl, tm+mm+bm, tr+mr+br, tl+mm+br, bl+mm+tr];
+
+        let _gameOver = false;
+
+        if (winningConditions.includes('XXX')){
+            console.log("X wins!");
+            _gameOver = true;
+        } else if (winningConditions.includes('OOO')){
+            console.log("O wins!");
+            _gameOver = true;
+        }
+        return(_gameOver);
+    }
+
     function resetBoard() {
         _gameState = [" ", " ", " ",
                       " ", " ", " ",
@@ -29,28 +54,45 @@ const gameBoard = (function() {
         _displayBoard();
     }
 
-    return {placeSymbol, resetBoard}
+    return {placeSymbol, resetBoard, checkForWin}
 
 })();
 
 const playerFactory = (symbol) => {
-    const place = (space) => {gameBoard.placeSymbol(space, symbol)};
-    return {place};
+
+    let turn = false;
+
+    const place = (space) => {
+        gameBoard.placeSymbol(space, symbol);
+        gameBoard.checkForWin();
+        turn = false;
+    };
+    return {place, symbol, turn};
 }
 
 
-const gameFactory = (playerChoice) => {
-    const playerOne = playerFactory(playerChoice);
+const newGame = (playerChoice) => {
 
-    let playerTwoChoice = (playerChoice === "X")? 'O': 'X';
+    let gameOver = false;
 
-    const playerTwo = playerFactory(playerTwoChoice);
+    const player = playerFactory(playerChoice);
 
-    return {playerOne, playerTwo};
+    let npcChoice = (playerChoice === "X")? 'O': 'X';
+
+    const npc = playerFactory(npcChoice);
+
+    if(player.symbol === "X"){
+        player.turn = true;
+    } else {player.turn = false;}
+
+    // while(!gameOver){
+    //     if(player.turn === true){
+    //         console.log("Your turn");
+    //     }
+
+    // }
+
+    return;
 }
 
-const game1 = gameFactory('X');
 
-game1.playerOne.place(3);
-
-game1.playerTwo.place(3);
