@@ -44,6 +44,7 @@ const gameBoard = (function() {
 
         if (winningConditions.includes('XXX')){
             console.log("X wins!");
+            document.querySelector(".status-display").textContent = "X wins!"
             _gameOver = true;
         } else if (winningConditions.includes('OOO')){
             console.log("O wins!");
@@ -56,6 +57,11 @@ const gameBoard = (function() {
         _gameState = [" ", " ", " ",
                       " ", " ", " ",
                       " ", " ", " "];
+        const gameCells = document.querySelectorAll(".game-cell");
+
+        gameCells.forEach((cell) =>{
+            cell.textContent = "";
+        });
         _displayBoard();
     }
 
@@ -78,6 +84,9 @@ const playerFactory = (symbol) => {
 
 
 function newGame(playerChoice){
+
+        gameBoard.resetBoard();
+        
        
         let gameOver = false;
 
@@ -108,7 +117,7 @@ function newGame(playerChoice){
 
                 if(!gameOver){
                     gameBoard.placeSymbol(parseInt(item.id), player.symbol);
-                    item.classList.add(player.symbol);
+                    item.textContent = player.symbol;
 
                     gameOver = gameBoard.checkForWin()
 
@@ -131,7 +140,7 @@ function newGame(playerChoice){
             actionTaken = npc.place(npcSpace);
         }
 
-        document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
+        document.getElementById(`${npcSpace}`).textContent = npc.symbol;
 
         gameOver = gameBoard.checkForWin();
 

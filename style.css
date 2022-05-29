@@ -11,6 +11,10 @@
     border: 2px solid black;
 }
 
+.blank::after{
+    content: " ";
+}
+
 .X::after {
     content: "X";
 }
