@@ -5,7 +5,10 @@ const gameBoard = (function() {
                         " ", " ", " ",
                         " ", " ", " "];
 
+    let placed;
+
     function _displayBoard(){
+        console.log("Game state:")
         for(let i = 0; i < 9; i++){
             console.log(_gameState[i]);
         }; 
@@ -15,11 +18,13 @@ const gameBoard = (function() {
         let index = space - 1;
         if(_gameState[index] === " "){
             _gameState[space - 1] = symbol;
+            _displayBoard();
+            placed = true;
         } else {
-            console.log("Sorry, that space is already taken.");
+            console.log("Sorry, that space is already taken.")
+            placed = false;
         }
-        checkForWin();
-        _displayBoard();
+        return placed;
     }
 
     function checkForWin() {
@@ -54,28 +59,27 @@ const gameBoard = (function() {
         _displayBoard();
     }
 
-    return {placeSymbol, resetBoard, checkForWin}
+    return {placeSymbol, resetBoard, checkForWin, placed}
 
 })();
 
 const playerFactory = (symbol) => {
 
-    let turn = false;
+    const turn = false;
+
 
     const place = (space) => {
-        gameBoard.placeSymbol(space, symbol);
-        gameBoard.checkForWin();
-        turn = false;
+        return gameBoard.placeSymbol(space, symbol); 
     };
     return {place, symbol, turn};
 }
 
 
-const gameZone = (function() {
 
-    function newGame(playerChoice){
 
-        let gameOver = gameBoard.checkForWin();
+function newGame(playerChoice){
+       
+        let gameOver = false;
 
         const player = playerFactory(playerChoice);
 
@@ -86,46 +90,55 @@ const gameZone = (function() {
         console.log("Player symbol:" + player.symbol);
         console.log("NPC symbol:" + npc.symbol);
 
-        const gridCells = document.querySelectorAll(".game-cell");
-
-        gridCells.forEach(item => {
-            item.addEventListener('click', () => {
-                gameBoard.placeSymbol(parseInt(item.id), player.symbol);
-                item.classList.add(player.symbol);
-                player.turn = false;
-                npc.turn = true;
-            })
-        })
-        
-
         // X always goes first
         if(player.symbol === "X"){
             player.turn = true;
-        } else {player.turn = false;
-            npc.turn = true;}
+        } else {
+            player.turn = false;
+            npcTurn();}
 
-        while(gameOver === false){
-            while(player.turn === true){
-                document.querySelector(".status-display").textContent = "Your turn";  
-            }
-            while(npc.turn === true){
-                let npcSpace = Math.floor(Math.random() * 8) + 1;
-                npc.place(npcSpace);
-                document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
-                npc.turn = false;
-                player.turn = true;
-            }
+        // Activate grid cells when game begins, customized based on user's
+        // choice of symbol
+
+        const gridCells = document.querySelectorAll(".game-cell");
+
+
+        gridCells.forEach(item => {
+            item.addEventListener('click', () => {
+
+                if(!gameOver){
+                    gameBoard.placeSymbol(parseInt(item.id), player.symbol);
+                    item.classList.add(player.symbol);
+
+                    gameOver = gameBoard.checkForWin()
+
+                    if(!gameOver){
+                        npcTurn();
+                    }}
+            })
+        })
+        
+        
+    
+    
+    function npcTurn(){
+
+        let npcSpace = Math.floor(Math.random() * 8) + 1;
+        let actionTaken = npc.place(npcSpace);
+
+        if(!actionTaken){npcTurn();}
+
+        document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
+
+        gameOver = gameBoard.checkForWin();
 
         
-    }}
 
-    
+        if(!gameOver){
+            player.turn = true;  
+        }
+    }
 
-    
-
-    return {newGame};
-})();
-
-
+}
 
 
