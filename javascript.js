@@ -7,7 +7,7 @@ const gameBoard = (function() {
 
     let placed;
 
-    function _displayBoard(){
+    function displayBoard(){
         console.log("Game state:")
         for(let i = 0; i < 9; i++){
             console.log(_gameState[i]);
@@ -18,7 +18,7 @@ const gameBoard = (function() {
         let index = space - 1;
         if(_gameState[index] === " "){
             _gameState[space - 1] = symbol;
-            _displayBoard();
+            displayBoard();
             placed = true;
         } else {
             console.log("Sorry, that space is already taken.")
@@ -44,13 +44,23 @@ const gameBoard = (function() {
 
         if (winningConditions.includes('XXX')){
             console.log("X wins!");
-            document.querySelector(".status-display").textContent = "X wins!"
+            document.querySelector(".status-display").textContent = "X wins!";
             _gameOver = true;
         } else if (winningConditions.includes('OOO')){
             console.log("O wins!");
+            document.querySelector(".status-display").textContent = "O wins!";
             _gameOver = true;
         }
         return(_gameOver);
+    }
+
+    function checkForTie() {
+        let tie = false;
+        if(!_gameState.includes(" ") && !checkForWin()){
+            document.querySelector(".status-display").textContent = "Tie!";
+            tie = true;
+        }
+        return tie;
     }
 
     function resetBoard() {
@@ -62,10 +72,10 @@ const gameBoard = (function() {
         gameCells.forEach((cell) =>{
             cell.textContent = "";
         });
-        _displayBoard();
+        displayBoard();
     }
 
-    return {placeSymbol, resetBoard, checkForWin, placed}
+    return {displayBoard, placeSymbol, placed, checkForWin, checkForTie, resetBoard}
 
 })();
 
@@ -85,10 +95,14 @@ const playerFactory = (symbol) => {
 
 function newGame(playerChoice){
 
+        document.querySelector(".status-display").textContent = "";
+
         gameBoard.resetBoard();
+        gameBoard.displayBoard();
         
        
         let gameOver = false;
+        let tie = false;
 
         const player = playerFactory(playerChoice);
 
@@ -115,13 +129,14 @@ function newGame(playerChoice){
         gridCells.forEach(item => {
             item.addEventListener('click', () => {
 
-                if(!gameOver){
-                    gameBoard.placeSymbol(parseInt(item.id), player.symbol);
+                if(!gameOver && !tie){
+                    let actionTaken = gameBoard.placeSymbol(parseInt(item.id), player.symbol);
                     item.textContent = player.symbol;
 
-                    gameOver = gameBoard.checkForWin()
+                    gameOver = gameBoard.checkForWin();
+                    tie = gameBoard.checkForTie();
 
-                    if(!gameOver){
+                    if(actionTaken && !gameOver && !tie){
                         npcTurn();
                     }}
             })
@@ -132,10 +147,13 @@ function newGame(playerChoice){
     
     function npcTurn(){
 
+        if(tie){return;}
+
         let actionTaken = false;
         let npcSpace;
 
         while(!actionTaken){
+            if(gameBoard.checkForTie()){return;}
             npcSpace = Math.floor(Math.random() * 8) + 1;
             actionTaken = npc.place(npcSpace);
         }
@@ -143,8 +161,9 @@ function newGame(playerChoice){
         document.getElementById(`${npcSpace}`).textContent = npc.symbol;
 
         gameOver = gameBoard.checkForWin();
+        tie = gameBoard.checkForTie();
 
-        if(!gameOver){
+        if(!gameOver && !tie){
             player.turn = true;  
         }
     }
