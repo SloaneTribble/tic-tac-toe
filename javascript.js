@@ -123,16 +123,17 @@ function newGame(playerChoice){
     
     function npcTurn(){
 
-        let npcSpace = Math.floor(Math.random() * 8) + 1;
-        let actionTaken = npc.place(npcSpace);
+        let actionTaken = false;
+        let npcSpace;
 
-        if(!actionTaken){npcTurn();}
+        while(!actionTaken){
+            npcSpace = Math.floor(Math.random() * 8) + 1;
+            actionTaken = npc.place(npcSpace);
+        }
 
         document.getElementById(`${npcSpace}`).classList.add(npc.symbol);
 
         gameOver = gameBoard.checkForWin();
-
-        
 
         if(!gameOver){
             player.turn = true;  
