@@ -128,123 +128,122 @@ function newGame(playerChoice){
         console.log("NPC symbol:" + npc.symbol);
 
 
+        // minimax algorithm credit to https://github.com/ahmadabdolsaheb/minimaxarticle/blob/master/index.js
+        // begin minimax
+        let huPlayer = player1.symbol;
+        // ai
+        let aiPlayer = npc.symbol;
 
-// begin miniMax
-var huPlayer = player1.symbol;
-// ai
-var aiPlayer = npc.symbol;
+        let origBoard = gameBoard.getGameState();
 
-// this is the board flattened and filled with some values to easier asses the Artificial Inteligence.
-var origBoard = gameBoard.getGameState();
+        //keeps count of function calls
+        let fc = 0;
 
-//keeps count of function calls
-var fc = 0;
+        // finding the ultimate play on the game that favors the computer
+        let bestSpot = minimax(origBoard, aiPlayer);
 
-// finding the ultimate play on the game that favors the computer
-var bestSpot = minimax(origBoard, aiPlayer);
+        //logging the results
+        console.log("index: " + bestSpot.index);
+        console.log("function calls: " + fc);
 
-//logging the results
-console.log("index: " + bestSpot.index);
-console.log("function calls: " + fc);
+        // the main minimax function
+        function minimax(newBoard, player){
+        //add one to function calls
+        fc++;
+        
+        //available spots
+        let availSpots = emptyIndexes(newBoard);
 
-// the main minimax function
-function minimax(newBoard, player){
-  //add one to function calls
-  fc++;
-  
-  //available spots
-  var availSpots = emptyIndexes(newBoard);
+        // checks for the terminal states such as win, lose, and tie and returning a value accordingly
+        if (winning(newBoard, huPlayer)){
+            return {score:-10};
+        }
+            else if (winning(newBoard, aiPlayer)){
+            return {score:10};
+            }
+        else if (availSpots.length === 0){
+            return {score:0};
+        }
 
-  // checks for the terminal states such as win, lose, and tie and returning a value accordingly
-  if (winning(newBoard, huPlayer)){
-     return {score:-10};
-  }
-	else if (winning(newBoard, aiPlayer)){
-    return {score:10};
-	}
-  else if (availSpots.length === 0){
-  	return {score:0};
-  }
+        // an array to collect all the objects
+        let moves = [];
 
-// an array to collect all the objects
-  var moves = [];
+        // loop through available spots
+        for (let i = 0; i < availSpots.length; i++){
+            //create an object for each and store the index of that spot that was stored as a number in the object's index key
+            let move = {};
+            move.index = newBoard[availSpots[i]];
 
-  // loop through available spots
-  for (var i = 0; i < availSpots.length; i++){
-    //create an object for each and store the index of that spot that was stored as a number in the object's index key
-    var move = {};
-  	move.index = newBoard[availSpots[i]];
+            // set the empty spot to the current player
+            newBoard[availSpots[i]] = player;
 
-    // set the empty spot to the current player
-    newBoard[availSpots[i]] = player;
+            //if collect the score resulted from calling minimax on the opponent of the current player
+            if (player == aiPlayer){
+            let result = minimax(newBoard, huPlayer);
+            move.score = result.score;
+            }
+            else{
+            let result = minimax(newBoard, aiPlayer);
+            move.score = result.score;
+            }
 
-    //if collect the score resulted from calling minimax on the opponent of the current player
-    if (player == aiPlayer){
-      var result = minimax(newBoard, huPlayer);
-      move.score = result.score;
-    }
-    else{
-      var result = minimax(newBoard, aiPlayer);
-      move.score = result.score;
-    }
+            //reset the spot to empty
+            newBoard[availSpots[i]] = move.index;
 
-    //reset the spot to empty
-    newBoard[availSpots[i]] = move.index;
+            // push the object to the array
+            moves.push(move);
+        }
 
-    // push the object to the array
-    moves.push(move);
-  }
+        // if it is the computer's turn loop over the moves and choose the move with the highest score
+        let bestMove;
+        if(player === aiPlayer){
+            let bestScore = -10000;
+            for(let i = 0; i < moves.length; i++){
+            if(moves[i].score > bestScore){
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+            }
+        }else{
 
-// if it is the computer's turn loop over the moves and choose the move with the highest score
-  var bestMove;
-  if(player === aiPlayer){
-    var bestScore = -10000;
-    for(var i = 0; i < moves.length; i++){
-      if(moves[i].score > bestScore){
-        bestScore = moves[i].score;
-        bestMove = i;
-      }
-    }
-  }else{
+        // else loop over the moves and choose the move with the lowest score
+            let bestScore = 10000;
+            for(let i = 0; i < moves.length; i++){
+            if(moves[i].score < bestScore){
+                bestScore = moves[i].score;
+                bestMove = i;
+            }
+            }
+        }
 
-// else loop over the moves and choose the move with the lowest score
-    var bestScore = 10000;
-    for(var i = 0; i < moves.length; i++){
-      if(moves[i].score < bestScore){
-        bestScore = moves[i].score;
-        bestMove = i;
-      }
-    }
-  }
+        // return the chosen move (object) from the array to the higher depth
+        return moves[bestMove];
+        }
 
-// return the chosen move (object) from the array to the higher depth
-  return moves[bestMove];
-}
+        // returns the available spots on the board
+        function emptyIndexes(board){
+        return  board.filter(s => s != "O" && s != "X");
+        }
 
-// returns the available spots on the board
-function emptyIndexes(board){
-  return  board.filter(s => s != "O" && s != "X");
-}
+        // winning combinations using the board indexies for instace the first win could be 3 xes in a row
+        function winning(board, player){
+        if (
+                (board[0] == player && board[1] == player && board[2] == player) ||
+                (board[3] == player && board[4] == player && board[5] == player) ||
+                (board[6] == player && board[7] == player && board[8] == player) ||
+                (board[0] == player && board[3] == player && board[6] == player) ||
+                (board[1] == player && board[4] == player && board[7] == player) ||
+                (board[2] == player && board[5] == player && board[8] == player) ||
+                (board[0] == player && board[4] == player && board[8] == player) ||
+                (board[2] == player && board[4] == player && board[6] == player)
+                ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-// winning combinations using the board indexies for instace the first win could be 3 xes in a row
-function winning(board, player){
- if (
-        (board[0] == player && board[1] == player && board[2] == player) ||
-        (board[3] == player && board[4] == player && board[5] == player) ||
-        (board[6] == player && board[7] == player && board[8] == player) ||
-        (board[0] == player && board[3] == player && board[6] == player) ||
-        (board[1] == player && board[4] == player && board[7] == player) ||
-        (board[2] == player && board[5] == player && board[8] == player) ||
-        (board[0] == player && board[4] == player && board[8] == player) ||
-        (board[2] == player && board[4] == player && board[6] == player)
-        ) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// end miniMax
+        // end miniMax
 
         // X always goes first
         if(player1.symbol === "X"){
@@ -304,28 +303,14 @@ function winning(board, player){
         if(!gameOver && !tie){
             player1.turn = true;  
         }
+    } 
+
+}
+
+const gameButton = function()
+    {
+        newGame(`${this.id}`);
     }
 
-    
-      
-  
-
-}
-
-
-function findWinningConditions(){
-    let tl = gameBoard.getGameState()[0];
-    let tm = gameBoard.getGameState()[1];
-    let tr = gameBoard.getGameState()[2];
-    let ml = gameBoard.getGameState()[3];
-    let mm = gameBoard.getGameState()[4];
-    let mr = gameBoard.getGameState()[5];
-    let bl = gameBoard.getGameState()[6];
-    let bm = gameBoard.getGameState()[7];
-    let br = gameBoard.getGameState()[8];
-
-    const winningConditions = [tl+tm+tr, ml+mm+mr, bl+bm+br, 
-        tl+ml+bl, tm+mm+bm, tr+mr+br, tl+mm+br, bl+mm+tr];
-
-    return winningConditions;
-}
+document.getElementById("O").onclick = gameButton;
+document.getElementById("X").onclick = gameButton;
