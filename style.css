@@ -1,5 +1,5 @@
 :root{
-    --form-control-color: rebeccapurple;
+    --form-control-color: black;
 }
 
 
@@ -12,22 +12,25 @@
 
 }
 
-.status-display{
-    font-size: 1.5rem;
+.title{
     text-align: center;
-    padding: 15px 0;
 }
+
+
 
 .game-container{
     display: grid;
 }
 
 .game-board{
+    margin: 0 5vw;
     display: grid;
+    justify-self: center;
     row-gap: 1px;
     column-gap: 2px;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(3, 1fr);
+    max-width: 900px;
 }
 
 .game-cell{
@@ -35,9 +38,17 @@
     justify-content: center;
     font-size: 5rem;
     align-items: center;
-    height: 150px;
+    min-height: 150px;
+    min-width: 150px;
     width: 100%;
+    max-width: 300px;
     border: 1px solid black;
+}
+
+.status-display{
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 15px 0;
 }
 
 #play{
@@ -50,10 +61,14 @@
 }
 
 .button{
-    padding: 8px;
+    padding: 12px;
+    display: grid;
+    justify-items: center;
 }
 
+
 input[type="radio"]{
+    justify-self: center;
     appearance: none;
     /* For ios < 15 remove gradient background */
     background-color: #fff;
@@ -61,7 +76,6 @@ input[type="radio"]{
     margin: 0;
     display: grid;
     place-content: center;
-
     font: inherit;
     color: currentColor;
     width: 1.15em;

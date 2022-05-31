@@ -9,6 +9,7 @@
     <script src="./javascript.js" defer></script>
 </head>
 <body>
+    <div class="title"><h1>Tic-tac-toe</h1></div>
     <div class="game-container">
         <div class="game-board">
             <div class="game-cell" id="0"></div>
@@ -26,26 +27,26 @@
 
                 
                 <div class="button X">
-                    <input type="radio" name="symbol" id="X" required>
                     <label for="X">Play as X</label>
+                    <input type="radio" name="symbol" id="X" required>
                 </div>
 
                 <div class="button O">
-                    <input type="radio" name="symbol" id="O" required>
                     <label for="O">Play as O</label>
+                    <input type="radio" name="symbol" id="O" required>
                 </div>
 
                 
                 <div class="button easy">
-                    <input type="radio" name="difficulty" id="easy" required>
                     <label for="easy">Facile</label>
+                    <input type="radio" name="difficulty" id="easy" required>
                 </div>
 
                 <div class="button hard">
+                    <label for="hard"><em>Beastly</em></label>
                     <input type="radio" name="difficulty" id="hard" required>
-                    <label for="hard">Beastly</label>
                 </div>
-                <button id="submit" type="submit">Begin</button>
+                <button id="submit" type="submit">New Game</button>
             </form>
     </div>
     
