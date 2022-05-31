@@ -8,22 +8,13 @@ const gameBoard = (function() {
     function getGameState(){
         return _gameState;
     }
-
+    // variable for keeping track of whether a placement was successful
     let placed;
 
-    // Useful for making sure the board matches the array on file
-    function displayBoard(){
-        console.log("Game state:")
-        for(let i = 0; i < 9; i++){
-            console.log(_gameState[i]);
-        }; 
-    }
-
     function placeSymbol(space, symbol) {
-        let index = space - 1;
+        let index = space;
         if(typeof(_gameState[index]) === 'number'){
-            _gameState[space - 1] = symbol;
-            displayBoard();
+            _gameState[index] = symbol;
             placed = true;
         } else {
             console.log("Sorry, that space is already taken.")
@@ -64,7 +55,6 @@ const gameBoard = (function() {
     function checkForTie() {
         let tie = false;
         let emptySpaces = _findEmptySpaces();
-        console.log(emptySpaces);
         if(emptySpaces.length === 0  && !checkForWin()){
             document.querySelector(".status-display").textContent = "Tie!";
             tie = true;
@@ -85,10 +75,9 @@ const gameBoard = (function() {
         gameCells.forEach((cell) =>{
             cell.textContent = "";
         });
-        displayBoard();
     }
 
-    return {displayBoard, getGameState, placeSymbol, placed, checkForWin, checkForTie, resetBoard}
+    return {getGameState, placeSymbol, placed, checkForWin, checkForTie, resetBoard}
 
 })();
 
@@ -106,9 +95,9 @@ const playerFactory = (symbol) => {
 
 
 
-function newGame(playerChoice){
+function newGame(playerChoice, difficulty){
 
-    
+        let difficultyChoice = difficulty;
 
         document.querySelector(".status-display").textContent = "";
 
@@ -225,7 +214,7 @@ function newGame(playerChoice){
         return  board.filter(s => s != "O" && s != "X");
         }
 
-        // winning combinations using the board indexies for instace the first win could be 3 xes in a row
+        // winning combinations using the board indexes
         function winning(board, player){
         if (
                 (board[0] == player && board[1] == player && board[2] == player) ||
@@ -263,7 +252,7 @@ function newGame(playerChoice){
 
                 if(!gameOver && !tie){
 
-                    // Check if the player successfully made a move
+                    // Variable is assigned true if the player successfully made a move
                     let actionTaken = gameBoard.placeSymbol(parseInt(item.id), player1.symbol);
                     item.textContent = player1.symbol;
 
@@ -288,10 +277,14 @@ function newGame(playerChoice){
 
         while(!actionTaken){
             if(gameBoard.checkForTie()){return;}
-            // npcSpace = Math.floor(Math.random() * 10);
-            npcSpace = minimax(origBoard, aiPlayer);
-            console.log("npc space" + npcSpace.index);
-            npcIndex = npcSpace.index + 1;
+
+            if(difficultyChoice === "easy"){
+                npcIndex = Math.floor(Math.random() * 9);
+                console.log(npcIndex)
+            } else {
+                npcSpace = minimax(origBoard, aiPlayer);
+                npcIndex = npcSpace.index;
+            }
             actionTaken = npc.place(npcIndex);
         }
 
@@ -307,10 +300,17 @@ function newGame(playerChoice){
 
 }
 
-const gameButton = function()
-    {
-        newGame(`${this.id}`);
-    }
+function play(){
+    const X = document.getElementById("X");
+    const O = document.getElementById("O");
+    let symbol = (X.checked)? "X" : "O";
 
-document.getElementById("O").onclick = gameButton;
-document.getElementById("X").onclick = gameButton;
+    const easy = document.getElementById("easy");
+    const hard = document.getElementById("hard");
+    let difficulty = (easy.checked)? "easy" : "hard";
+
+    console.log(symbol, difficulty);
+    newGame(symbol, difficulty);
+}
+
+document.getElementById("play").onclick = play;
