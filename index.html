@@ -9,34 +9,44 @@
     <script src="./javascript.js" defer></script>
 </head>
 <body>
-    <div class="game-board">
-        <div class="game-cell" id="0">top left</div>
-        <div class="game-cell" id="1">top middle</div>
-        <div class="game-cell" id="2">top right</div>
-        <div class="game-cell" id="3">middle left</div>
-        <div class="game-cell" id="4">middle middle</div>
-        <div class="game-cell" id="5">middle right</div>
-        <div class="game-cell" id="6">bottom left</div>
-        <div class="game-cell" id="7">bottom middle</div>
-        <div class="game-cell" id="8">bottom right</div>
-    </div>
-    <div class="status-display"></div>
+    <div class="game-container">
+        <div class="game-board">
+            <div class="game-cell" id="0"></div>
+            <div class="game-cell" id="1"></div>
+            <div class="game-cell" id="2"></div>
+            <div class="game-cell" id="3"></div>
+            <div class="game-cell" id="4"></div>
+            <div class="game-cell" id="5"></div>
+            <div class="game-cell" id="6"></div>
+            <div class="game-cell" id="7"></div>
+            <div class="game-cell" id="8"></div>
+        </div>
+        <div class="status-display">Please choose your symbol and difficulty</div>
+            <form action="#" id="play">
 
-    <div id="form-container">
-        
-        <input type="radio" name="symbol" id="X">
-        <label for="X">Play as X</label>
+                
+                <div class="button X">
+                    <input type="radio" name="symbol" id="X" required>
+                    <label for="X">Play as X</label>
+                </div>
 
-        <input type="radio" name="symbol" id="O">
-        <label for="O">Play as O</label>
+                <div class="button O">
+                    <input type="radio" name="symbol" id="O" required>
+                    <label for="O">Play as O</label>
+                </div>
 
-        <input type="radio" name="difficulty" id="easy">
-        <label for="easy">Facile</label>
+                
+                <div class="button easy">
+                    <input type="radio" name="difficulty" id="easy" required>
+                    <label for="easy">Facile</label>
+                </div>
 
-        <input type="radio" name="difficulty" id="hard">
-        <label for="hard">Beastly</label>
-
-        <button type="submit" id="play">Begin</button>
+                <div class="button hard">
+                    <input type="radio" name="difficulty" id="hard" required>
+                    <label for="hard">Beastly</label>
+                </div>
+                <button id="submit" type="submit">Begin</button>
+            </form>
     </div>
     
     

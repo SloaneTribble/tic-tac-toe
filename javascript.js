@@ -97,13 +97,15 @@ const playerFactory = (symbol) => {
 
 function newGame(playerChoice, difficulty){
 
+    
         let difficultyChoice = difficulty;
-
+        
         document.querySelector(".status-display").textContent = "";
-
+        
         gameBoard.resetBoard();
         
-       
+        document.querySelector(".status-display").textContent = "The game has begun";
+        
         let gameOver = false;
         let tie = false;
 
@@ -303,6 +305,7 @@ function newGame(playerChoice, difficulty){
 function play(){
     const X = document.getElementById("X");
     const O = document.getElementById("O");
+
     let symbol = (X.checked)? "X" : "O";
 
     const easy = document.getElementById("easy");
@@ -311,6 +314,7 @@ function play(){
 
     console.log(symbol, difficulty);
     newGame(symbol, difficulty);
+    return false;
 }
 
-document.getElementById("play").onclick = play;
+document.getElementById("play").onsubmit = play;
