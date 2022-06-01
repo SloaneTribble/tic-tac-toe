@@ -80,7 +80,7 @@ input[type="radio"]{
     justify-self: center;
     appearance: none;
     /* For ios < 15 remove gradient background */
-    background-color: rgb(254, 244, 227);
+    background-color: rgb(255, 249, 237);
     /* Margin not removed via appearance */
     margin: 0;
     display: grid;
