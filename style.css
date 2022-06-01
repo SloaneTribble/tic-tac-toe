@@ -9,17 +9,25 @@
 *,
 *:before,
 *:after{
-
+    box-sizing: border-box;
+    max-width: 100%;
+    margin: 0;
 }
 
 .title{
+    padding: 32px 0 16px;
     text-align: center;
+}
+
+body, html{
+    width: 100%;
 }
 
 
 
 .game-container{
     display: grid;
+    height: fit-content;
 }
 
 .game-board{
@@ -34,6 +42,7 @@
 }
 
 .game-cell{
+    background-color: antiquewhite;
     display: flex;
     justify-content: center;
     font-size: 5rem;
@@ -71,7 +80,7 @@ input[type="radio"]{
     justify-self: center;
     appearance: none;
     /* For ios < 15 remove gradient background */
-    background-color: #fff;
+    background-color: rgb(254, 244, 227);
     /* Margin not removed via appearance */
     margin: 0;
     display: grid;
@@ -118,7 +127,18 @@ input[type="radio"]:checked::before {
     background-color: brown;
 }
 
-#submit{
+#submit,
+#surrender{
     grid-column: 1 / 3;
     font-size: 1.5rem;
+}
+
+footer{
+    position: absolute;
+    width: 100%;
+    margin: 0 auto;
+    bottom: 5px;
+    text-align: center;
+    overflow-x: hidden;
+
 }

@@ -42,11 +42,15 @@ const gameBoard = (function() {
             console.log("X wins!");
             console.log("Index of win:" + winningConditions.indexOf('XXX'));
             document.querySelector(".status-display").textContent = "X wins!";
-            _gameOver = true;
+            document.getElementById("submit").disabled = false;
+             _gameOver = true;
+
         } else if (winningConditions.includes('OOO')){
             console.log("O wins!");
             document.querySelector(".status-display").textContent = "O wins!";
             _gameOver = true;
+            document.getElementById("submit").disabled = false;
+
         }
         return(_gameOver);
     }
@@ -58,12 +62,22 @@ const gameBoard = (function() {
         if(emptySpaces.length === 0  && !checkForWin()){
             document.querySelector(".status-display").textContent = "Tie!";
             tie = true;
+            document.getElementById("submit").disabled = false;
+
         }
         return tie;
     }
 
+
     function _findEmptySpaces(){
         return _gameState.filter(s => s != "O" && s != "X");
+    }
+
+    function checkIfEmpty(){
+        let emptySpaces = _findEmptySpaces();
+        console.log("Empty spaces:" + emptySpaces.length);
+        if(emptySpaces.length < 9){return false;}
+        return true;
     }
 
     function resetBoard() {
@@ -77,7 +91,7 @@ const gameBoard = (function() {
         });
     }
 
-    return {getGameState, placeSymbol, placed, checkForWin, checkForTie, resetBoard}
+    return {getGameState, placeSymbol, placed, checkForWin, checkForTie, checkIfEmpty, resetBoard}
 
 })();
 
@@ -111,7 +125,10 @@ function newGame(playerChoice, difficulty){
 
         const player1 = playerFactory(playerChoice);
 
-        let npcChoice = (playerChoice === "X")? "O": "X";
+        let npcChoice;
+
+        if(playerChoice === "X"){npcChoice = "O";}
+        if(playerChoice === "O"){npcChoice = "X";}
 
         const npc = playerFactory(npcChoice);
 
@@ -253,6 +270,7 @@ function newGame(playerChoice, difficulty){
             item.addEventListener('click', () => {
 
                 if(!gameOver && !tie){
+                    console.log("Button clicked; player symbol:" + player1.symbol);
 
                     // Variable is assigned true if the player successfully made a move
                     let actionTaken = gameBoard.placeSymbol(parseInt(item.id), player1.symbol);
@@ -303,13 +321,18 @@ function newGame(playerChoice, difficulty){
 }
 
 function play(){
+
+    // Something was getting seriously messed up if I allowed players 
+    // to start a new game mid-match.  It seemed the easiest way to handle this
+    // without rebuilding the program was to disable the new game button mid-game
+
+    document.getElementById("submit").disabled = true;
+
     const X = document.getElementById("X");
-    const O = document.getElementById("O");
 
     let symbol = (X.checked)? "X" : "O";
 
     const easy = document.getElementById("easy");
-    const hard = document.getElementById("hard");
     let difficulty = (easy.checked)? "easy" : "hard";
 
     console.log(symbol, difficulty);
@@ -318,3 +341,4 @@ function play(){
 }
 
 document.getElementById("play").onsubmit = play;
+
