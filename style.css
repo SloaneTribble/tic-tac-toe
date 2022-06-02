@@ -18,6 +18,15 @@ html{
     margin: 0;
 }
 
+.page-container{
+    position: relative;
+    min-height: 100vh;
+}
+
+.content-wrap{
+    padding-bottom: 2.5rem;
+}
+
 .title{
     padding: 32px 0 16px;
     text-align: center;
@@ -141,10 +150,10 @@ input[type="radio"]:checked::before {
 
 footer{
     position: absolute;
+    height: 2.5rem;
     width: 100%;
     margin: 0 auto;
-    bottom: 5px;
+    bottom: 0;
     text-align: center;
     overflow-x: hidden;
-
 }
