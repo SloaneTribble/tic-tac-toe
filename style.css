@@ -6,10 +6,14 @@
 /* Set box-sizing to border box with universal selector so that
     padding and border will be included in elements' calculated final size, 
     instead of increasing the computed size beyond any set dimensions */
+
+html{
+    box-sizing: border-box;
+}
 *,
 *:before,
 *:after{
-    box-sizing: border-box;
+    box-sizing: inherit;
     max-width: 100%;
     margin: 0;
 }
@@ -21,6 +25,8 @@
 
 body, html{
     width: 100%;
+    min-height: 100vh;
+    position: relative;
 }
 
 
