@@ -36,14 +36,13 @@ html{
 body, html{
     width: 100%;
     min-height: 100vh;
-    position: relative;
 }
 
 
 
 .game-container{
     display: grid;
-    height: fit-content;
+    grid-template-rows: 452px 57px 250px;
 }
 
 .game-board{
@@ -55,6 +54,8 @@ body, html{
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(3, 1fr);
     max-width: 900px;
+    max-height: 600px;
+    min-height: fit-content;
 }
 
 .game-cell{
